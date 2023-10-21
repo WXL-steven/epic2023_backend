@@ -112,6 +112,8 @@
 #         return predictions
 
 import logging
+import platform
+
 import numpy as np
 import onnxruntime as ort
 import torch
@@ -137,13 +139,12 @@ class ImageClassifier:
 
     """
 
-    def __init__(self, model_name='davit_tiny', checkpoint_path='./Checkpoint/best_onnx.onnx', num_classes=4,
+    def __init__(self, checkpoint_path='./Checkpoint/best_onnx.onnx', num_classes=4,
                  labels=('hazardous', 'kitchen', 'other', 'recyclable')):
         """
             Initializes an instance of the ImageClassifier class.
 
             Args:
-                model_name (str, optional): The name of the model. Default is 'davit_tiny'.
                 checkpoint_path (str, optional): The path of the checkpoint file. Default is
                     './Checkpoint/best_onnx.onnx'.
                 num_classes (int, optional): The number of classes. Default is 4.
@@ -168,7 +169,7 @@ class ImageClassifier:
         self.logger = logging.getLogger("epic2023.ImageClassifier")
 
         # Log the model and checkpoint path information
-        self.logger.info(f"Model {model_name} loaded from {checkpoint_path}")
+        self.logger.info(f"Model loaded from {checkpoint_path}")
 
         # Log the runtime device
         self.logger.info(f"Model running on: {self.session.get_providers()}")
@@ -211,6 +212,53 @@ class ImageClassifier:
         values, indices = torch.topk(probabilities, top_k)
 
         # Prepare a nice dict of top k predictions
+        predictions = [
+            {"label": self.labels[i], "score": float(v)}
+            for i, v in zip(indices, values)
+        ]
+
+        self.logger.info(f"Inference result: {predictions}")
+
+        return predictions
+
+
+class RKNNImageClassifier:
+    def __init__(self, checkpoint_path='./Checkpoint/best_rknn.rknn', num_classes=4,
+                 labels=('hazardous', 'kitchen', 'other', 'recyclable')):
+        self.logger = logging.getLogger("epic2023.ImageClassifier")
+        self.logger.info("Using Backend: RKNN_Lite")
+        try:
+            from rknnlite.api import RKNNLite
+        except ImportError:
+            self.logger.error("Could not import RKNN_Lite.")
+            raise SystemExit
+        if not (platform.system() == 'Linux' and platform.machine() == 'aarch64'):
+            self.logger.error("RKNN_Lite only supports Linux aarch64.")
+            raise SystemExit
+        self.rknn_lite = RKNNLite()
+        if self.rknn_lite.load_rknn(checkpoint_path) != 0:
+            self.logger.error(f"Could not load model from {checkpoint_path}.")
+            raise SystemExit
+        self.logger.info(f"Succeeded loading model from {checkpoint_path}.")
+
+        self.labels = labels
+        self.is_initialized = True
+
+    def predict(self, image):
+        if not self.is_initialized:
+            self.logger.error("Could not predict: model is not initialized.")
+            return None
+
+        image = np.array(image)
+
+        outputs = self.rknn_lite.inference(inputs=[image])
+        outputs = outputs[0][0]
+
+        probabilities = torch.nn.functional.softmax(torch.from_numpy(outputs), dim=0)
+
+        top_k = min(len(self.labels), 5)
+        values, indices = torch.topk(probabilities, top_k)
+
         predictions = [
             {"label": self.labels[i], "score": float(v)}
             for i, v in zip(indices, values)

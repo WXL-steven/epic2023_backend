@@ -154,6 +154,16 @@ class WebSocketServer:
         })
         self.send_messages(message)
 
+    def update_inference_result(self, image, result):
+        self.send_image(image, "resultImageTransfer")
+        self.add_trash(result[0]["label"])
+        message = json.dumps({
+            "application": "epic2023",
+            "service": "updateResult",
+            "result": result
+        })
+        self.send_messages(message)
+
 
 if __name__ == "__main__":
     logger = logging.getLogger("epic2023")

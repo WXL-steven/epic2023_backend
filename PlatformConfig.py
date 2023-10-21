@@ -1,7 +1,7 @@
 import logging
 
 # 串口配置
-SERIAL_PORT = "COM4"  # '/dev/ttyUSB0'
+SERIAL_PORT = '/dev/ttyS3'
 SERIAL_BAUD = 115200
 SERIAL_BUFFER_SIZE = 1024
 SERIAL_PACKAGE_TIMEOUT = 1

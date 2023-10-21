@@ -68,13 +68,15 @@ def main():
         last_shoot_time = time.time()
         while True:
             if ClassifierSignal.signal:
-                frame = camera.get_frame()
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                frame = Image.fromarray(frame)
+                frame_ori = camera.get_frame()
                 if frame is not None:
-                    result = cf.predict(Image.fromarray(frame))
+                    frame = cv2.cvtColor(frame_ori, cv2.COLOR_BGR2RGB)
+                    frame = Image.fromarray(frame)
+                    result = cf.predict(frame)
                     serial.send_classifier_result(result)
                     ClassifierSignal.deactivate()
+                    server.send_image(frame_ori, "resultImageTransfer")
+                    server.add_trash(result[0]["label"])
             elif time.time() - last_shoot_time > 1/Config.DISPLAY_FRAME_RATE:
                 frame = camera.get_frame()
                 if frame is not None:

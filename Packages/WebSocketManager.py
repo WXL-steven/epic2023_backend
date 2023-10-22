@@ -160,7 +160,7 @@ class WebSocketServer:
         message = json.dumps({
             "application": "epic2023",
             "service": "updateResult",
-            "result": result
+            "result": json.dumps(result)
         })
         self.send_messages(message)
 

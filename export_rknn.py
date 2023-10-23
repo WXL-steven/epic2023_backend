@@ -29,35 +29,6 @@ def show_outputs(outputs):
     print(top5_str)
 
 
-def readable_speed(speed):
-    speed_bytes = float(speed)
-    speed_kbytes = speed_bytes / 1024
-    if speed_kbytes > 1024:
-        speed_mbytes = speed_kbytes / 1024
-        if speed_mbytes > 1024:
-            speed_gbytes = speed_mbytes / 1024
-            return "{:.2f} GB/s".format(speed_gbytes)
-        else:
-            return "{:.2f} MB/s".format(speed_mbytes)
-    else:
-        return "{:.2f} KB/s".format(speed_kbytes)
-
-
-def show_progress(blocknum, blocksize, totalsize):
-    speed = (blocknum * blocksize) / (time.time() - start_time)
-    speed_str = " Speed: {}".format(readable_speed(speed))
-    recv_size = blocknum * blocksize
-
-    f = sys.stdout
-    progress = (recv_size / totalsize)
-    progress_str = "{:.2f}%".format(progress * 100)
-    n = round(progress * 50)
-    s = ('#' * n).ljust(50, '-')
-    f.write(progress_str.ljust(8, ' ') + '[' + s + ']' + speed_str)
-    f.flush()
-    f.write('\r\n')
-
-
 if __name__ == '__main__':
 
     # Create RKNN object
@@ -68,7 +39,12 @@ if __name__ == '__main__':
 
     # pre-process config
     print('--> config model')
-    rknn.config(mean_values=[123.675, 116.28, 103.53], std_values=[58.82, 58.82, 58.82], target_platform='rk3566')
+    rknn.config(
+        mean_values=[123.675, 116.28, 103.53],
+        std_values=[58.82, 58.82, 58.82],
+        target_platform='rk3588',
+        model_pruning=True,  # 启用模型剪枝
+    )
     print('done')
 
     # Load model
@@ -81,7 +57,10 @@ if __name__ == '__main__':
 
     # Build model
     print('--> Building model')
-    ret = rknn.build(do_quantization=True, dataset='./dataset.txt')
+    ret = rknn.build(
+        do_quantization=False,  # 不启用量化
+        rknn_batch_size=1,
+    )
     if ret != 0:
         print('Build model failed!')
         exit(ret)

@@ -295,8 +295,14 @@ class ImageClassifier_RKNN:
         # 使用 PIL 的 crop 方法进行裁剪
         cropped_image = resized_image.crop((start, start, end, end))
 
-        # 将 PIL 图像转换为 NumPy 数组，并增加一个维度
-        final_image = np.expand_dims(np.array(cropped_image), axis=0)
+        # 将 PIL 图像转换为 NumPy 数组
+        np_image = np.array(cropped_image)
+
+        # 将图像的形状从 (Height, Width, Channels) 转换为 (Channels, Height, Width)
+        np_image = np.transpose(np_image, (2, 0, 1))
+
+        # 添加一个新的维度作为第一个维度
+        final_image = np.expand_dims(np_image, axis=0)
 
         return final_image
 

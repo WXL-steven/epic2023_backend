@@ -2,7 +2,6 @@ import logging
 import platform
 
 import numpy as np
-from PIL import Image
 from PIL.Image import Resampling
 
 IS_TORCH_AVAILABLE = True

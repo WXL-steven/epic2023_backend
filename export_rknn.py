@@ -49,7 +49,11 @@ if __name__ == '__main__':
 
     # Load model
     print('--> Loading model')
-    ret = rknn.load_onnx(model=ONNX_MODEL)
+    ret = rknn.load_onnx(
+        model=ONNX_MODEL,
+        inputs=['input'],
+        input_size_list=[[1, 3, 224, 224]],
+    )
     if ret != 0:
         print('Load model failed!')
         exit(ret)

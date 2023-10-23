@@ -78,26 +78,6 @@ if __name__ == '__main__':
         exit(ret)
     print('done')
 
-    # Set inputs
-    img = cv2.imread('./dog_224x224.jpg')
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
-    # Init runtime environment
-    print('--> Init runtime environment')
-    ret = rknn.init_runtime()
-    if ret != 0:
-        print('Init runtime environment failed!')
-        exit(ret)
-    print('done')
-
-    # Inference
-    print('--> Running model')
-    outputs = rknn.inference(inputs=[img])
-    np.save('./onnx_resnet50v2_0.npy', outputs[0])
-    x = outputs[0]
-    output = np.exp(x)/np.sum(np.exp(x))
-    outputs = [output]
-    show_outputs(outputs)
-    print('done')
+    print(f"Model exported to {RKNN_MODEL}")
 
     rknn.release()

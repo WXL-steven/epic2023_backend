@@ -51,7 +51,7 @@ if __name__ == '__main__':
     print('--> Loading model')
     ret = rknn.load_onnx(
         model=ONNX_MODEL,
-        inputs=['input'],
+        inputs=['input0'],
         input_size_list=[[1, 3, 224, 224]],
     )
     if ret != 0:

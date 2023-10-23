@@ -10,7 +10,7 @@ try:
     import PlatformConfig as Config
     from Packages.Serial import SerialManager
     from Packages.WebSocketManager import WebSocketServer
-    from Packages.NeuralNetwork import ImageClassifier
+    from Packages.NeuralNetwork import ImageClassifier_ONNX
     from Packages.RequestParser import SerialParser, WSParser
     from Packages.Camera import CameraManager
 except ImportError:
@@ -50,7 +50,7 @@ def main():
     serial.open_port()
     server.add_connect_callback(server.send_device_status, "mcu", "ready")
 
-    cf = ImageClassifier()
+    cf = ImageClassifier_ONNX()
 
     camera = CameraManager()
     if camera.open_camera() and camera.status:

@@ -59,7 +59,7 @@ if __name__ == '__main__':
     print('--> Building model')
     ret = rknn.build(
         do_quantization=False,  # 不启用量化
-        rknn_batch_size=1,
+        # rknn_batch_size=1,
     )
     if ret != 0:
         print('Build model failed!')

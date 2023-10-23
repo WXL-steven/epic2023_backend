@@ -263,7 +263,7 @@ class ImageClassifier_ONNX:
 
 
 class ImageClassifier_RKNN:
-    def __init__(self, checkpoint_path='./Checkpoint/best_rknn.rknn', num_classes=4,
+    def __init__(self, checkpoint_path='./Checkpoint/davit_t.rknn', num_classes=4,
                  labels=('hazardous', 'kitchen', 'other', 'recyclable')):
         self.logger = logging.getLogger("epic2023.ImageClassifier")
         self.logger.info("Using Backend: RKNN_Lite")
@@ -340,5 +340,6 @@ if __name__ == '__main__':
     logger.addHandler(handler)
 
     # cf = ImageClassifier(checkpoint_path=r'../Checkpoint/model_best.pth.tar')
-    cf = ImageClassifier_ONNX(checkpoint_path=r'../Checkpoint/best_onnx.onnx')
+    # cf = ImageClassifier_ONNX(checkpoint_path=r'../Checkpoint/best_onnx.onnx')
+    cf = ImageClassifier_RKNN(checkpoint_path=r'../Checkpoint/davit_t.rknn')
     print(cf.predict(Image.open(r'../test_images/k.png')))

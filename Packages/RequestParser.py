@@ -16,7 +16,6 @@ class SerialParser:
 
         Attributes:
             logger (Logger): Instance of the logging class to log information and debugging details.
-            message_poster (function): Function to post parsed messages to.
             call_classifier (function): Optional function to call a classifier for further data processing.
     """
     _DEVICE_NAME_MAP = {

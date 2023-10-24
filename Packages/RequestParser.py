@@ -265,7 +265,7 @@ class WSParser:
         #     self.logger.error(f"Package length is not 2. Received package: {package}")
         #     return None
 
-        result = b'\x02C\x03'
+        result = b'\x02P\x03'
 
         return result
 

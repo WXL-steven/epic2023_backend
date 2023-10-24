@@ -160,6 +160,8 @@ class SerialManager:
                 else:
                     self.logger.error("Callback not initialized.")
                 self.buffer.clear()
+                # 清空硬件缓冲区
+                self.ser.reset_input_buffer()
             elif self.recording:
                 self.buffer.append(data)
 

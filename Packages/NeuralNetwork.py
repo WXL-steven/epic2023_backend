@@ -341,6 +341,8 @@ class ImageClassifier_RKNN:
 
 if __name__ == '__main__':
     from PIL import Image
+    import random
+    import time
 
     logger = logging.getLogger("epic2023")
     logger.setLevel(logging.INFO)
@@ -349,7 +351,16 @@ if __name__ == '__main__':
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
+    image_list = [r'../test_images/h.png', r'../test_images/k.png', r'../test_images/o.png', r'../test_images/r.png']
+
     # cf = ImageClassifier(checkpoint_path=r'../Checkpoint/model_best.pth.tar')
     # cf = ImageClassifier_ONNX(checkpoint_path=r'../Checkpoint/best_onnx.onnx')
     cf = ImageClassifier_RKNN(checkpoint_path=r'../Checkpoint/davit_t.rknn')
-    print(cf.predict(Image.open(r'../test_images/k.png')))
+    time_waste = []
+    for i in range(100):
+        t1 = time.time()
+        cf.predict(Image.open(random.choice(image_list)))
+        t2 = time.time()
+        print(f"Test {i}: {(t2 - t1)*1000}ms")
+        time_waste.append((t2 - t1)*1000)
+    print(f"Average: {sum(time_waste)/len(time_waste)}ms")

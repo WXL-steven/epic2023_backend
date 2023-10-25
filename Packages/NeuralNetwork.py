@@ -280,6 +280,11 @@ class ImageClassifier_RKNN:
             raise SystemExit
         self.logger.info(f"Succeeded loading model from {checkpoint_path}.")
 
+        if self.rknn_lite.init_runtime(target=None) != 0:
+            self.logger.error(f"Could not initialize runtime.")
+            raise SystemExit
+        self.logger.info(f"Succeeded initializing runtime.")
+
         self.labels = labels
         self.is_initialized = True
 

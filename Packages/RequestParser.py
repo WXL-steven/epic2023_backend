@@ -41,7 +41,7 @@ class SerialParser:
 
     _WORK_STATUS_MAP = {
         'I': 'idle',
-        'W': 'working',
+        'B': 'working',
     }
 
     _CONTAINER_NAME_MAP = {

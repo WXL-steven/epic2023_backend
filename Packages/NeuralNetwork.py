@@ -354,7 +354,7 @@ if __name__ == '__main__':
 
     # cf = ImageClassifier(checkpoint_path=r'../Checkpoint/model_best.pth.tar')
     # cf = ImageClassifier_ONNX(checkpoint_path=r'../Checkpoint/best_onnx.onnx')
-    cf = ImageClassifier_Pytorch(checkpoint_path=r'../Checkpoint/model_best.pth.tar')
+    cf = ImageClassifier_ONNX(checkpoint_path=r'../Checkpoint/davit_t.onnx')
     # time_waste = []
     # for i in range(100):
     #     t1 = time.time()

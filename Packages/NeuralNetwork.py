@@ -102,7 +102,6 @@ class ImageClassifier_Pytorch:
         self.logger.info(f"Running model on {self.device}")
 
         self.transform = create_transform(**resolve_data_config(self.model.pretrained_cfg, model=self.model))
-        print(self.transform)
 
         self.is_initialized = True
 
@@ -355,12 +354,13 @@ if __name__ == '__main__':
 
     # cf = ImageClassifier(checkpoint_path=r'../Checkpoint/model_best.pth.tar')
     # cf = ImageClassifier_ONNX(checkpoint_path=r'../Checkpoint/best_onnx.onnx')
-    cf = ImageClassifier_RKNN(checkpoint_path=r'../Checkpoint/davit_t.rknn')
-    time_waste = []
-    for i in range(100):
-        t1 = time.time()
-        cf.predict(Image.open(random.choice(image_list)))
-        t2 = time.time()
-        print(f"Test {i}: {(t2 - t1)*1000}ms")
-        time_waste.append((t2 - t1)*1000)
-    print(f"Average: {sum(time_waste)/len(time_waste)}ms")
+    cf = ImageClassifier_Pytorch(checkpoint_path=r'../Checkpoint/model_best.pth.tar')
+    # time_waste = []
+    # for i in range(100):
+    #     t1 = time.time()
+    #     cf.predict(Image.open(random.choice(image_list)))
+    #     t2 = time.time()
+    #     print(f"Test {i}: {(t2 - t1)*1000}ms")
+    #     time_waste.append((t2 - t1)*1000)
+    # print(f"Average: {sum(time_waste)/len(time_waste)}ms")
+    cf.predict(Image.open(image_list[1]))

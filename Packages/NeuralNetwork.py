@@ -340,8 +340,8 @@ class ImageClassifier_RKNN:
 
 if __name__ == '__main__':
     from PIL import Image
-    import random
-    import time
+    # import random
+    # import time
 
     logger = logging.getLogger("epic2023")
     logger.setLevel(logging.INFO)

@@ -50,7 +50,7 @@ def main():
     serial.open_port()
     server.add_connect_callback(server.send_device_status, "mcu", "ready")
 
-    cf = ImageClassifier_ONNX()
+    cf = ImageClassifier_ONNX(r"./Checkpoint/davit_t.onnx")
 
     camera = CameraManager()
     if camera.open_camera() and camera.status:
